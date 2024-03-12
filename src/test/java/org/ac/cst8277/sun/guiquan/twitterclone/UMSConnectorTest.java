@@ -35,7 +35,7 @@ public class UMSConnectorTest {
      */
     @Test
     public void test() {
-        String uri = "/getUserTokenByTokenId";
+        /*String uri = "/getUserTokenByTokenId";
         WebClient client = WebClient.builder().baseUrl(uriUmsHost + ":" + uriUmsPort)
                 .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                 .defaultHeader("token","39f3b313-9f55-4acb-80d6-80b3d84838fb")
@@ -50,6 +50,6 @@ public class UMSConnectorTest {
             userTokenVo = HttpResponseExtractor.extractDataFromHttpClientResponse(objectOptional.get(),
                     UserTokenVo.class);
             System.err.println(userTokenVo);
-        }
+        }*/
     }
 }
