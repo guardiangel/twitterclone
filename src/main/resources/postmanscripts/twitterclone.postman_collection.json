@@ -1,0 +1,97 @@
+{
+	"info": {
+		"_postman_id": "b19c30c9-d76c-435f-8921-657ea505d37a",
+		"name": "twitterclone",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "19509616"
+	},
+	"item": [
+		{
+			"name": "http://localhost:9001/getMessagesByProducerId",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "token",
+						"value": "39f3b313-9f55-4acb-80d6-80b3d84838fb",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:9001/getMessagesByProducerId?userId=bcc9cd9e-207c-44f9-842e-ec90421fdab2",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9001",
+					"path": [
+						"getMessagesByProducerId"
+					],
+					"query": [
+						{
+							"key": "userId",
+							"value": "bcc9cd9e-207c-44f9-842e-ec90421fdab2"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:9001/getAllMessages",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "token",
+						"value": "39f3b313-9f55-4acb-80d6-80b3d84838fb",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:9001/getAllMessages",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9001",
+					"path": [
+						"getAllMessages"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:9001/getMessagesBySubscriberId?userId=a19d4c5d0cfe",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "token",
+						"value": "39f3b313-9f55-4acb-80d6-80b3d84838fb",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:9001/getMessagesBySubscriberId?userId=eda55c5a-9552-46ed-945d-a19d4c5d0cfe",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9001",
+					"path": [
+						"getMessagesBySubscriberId"
+					],
+					"query": [
+						{
+							"key": "userId",
+							"value": "eda55c5a-9552-46ed-945d-a19d4c5d0cfe"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
