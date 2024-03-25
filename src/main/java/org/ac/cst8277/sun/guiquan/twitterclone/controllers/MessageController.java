@@ -2,7 +2,9 @@ package org.ac.cst8277.sun.guiquan.twitterclone.controllers;
 
 import jakarta.annotation.Resource;
 import org.ac.cst8277.sun.guiquan.twitterclone.entities.MessageEntity;
+import org.ac.cst8277.sun.guiquan.twitterclone.reponseVo.UserTokenVo;
 import org.ac.cst8277.sun.guiquan.twitterclone.services.MessageService;
+import org.ac.cst8277.sun.guiquan.twitterclone.utils.ConstantsUtils;
 import org.ac.cst8277.sun.guiquan.twitterclone.utils.JSONResult;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,11 +25,18 @@ public class MessageController {
     @GetMapping("/getMessagesByProducerId")
     public JSONResult<Object> getMessagesByProducerId(@RequestHeader("token") String token,
                                                       @RequestParam("userId") String userId) {
-        boolean flag = messageService.verifyToken(token);
+        UserTokenVo userTokenVo = messageService.verifyToken(token);
         List<MessageEntity> entityList;
-        if (flag) {
-            entityList = messageService.getMessagesByProducerId(userId);
-            return jsonResult.success(HttpStatus.OK.value(), entityList);
+        if (userTokenVo != null) {
+            if (userTokenVo.getRoleList().contains(ConstantsUtils.ROLE_ADMIN)
+                    || userTokenVo.getRoleList().contains(ConstantsUtils.ROLE_PRODUCER)) {
+                entityList = messageService.getMessagesByProducerId(userId);
+                return jsonResult.success(HttpStatus.OK.value(), entityList);
+            } else {
+                return jsonResult.error(HttpStatus.UNAUTHORIZED.value(),
+                        "Your current role is not admin or producer, can't use this method.");
+            }
+
         } else {
             return jsonResult.error(HttpStatus.UNAUTHORIZED.value(),
                     "The current token is not valid or expired, please get new one from ums application.");
@@ -36,11 +45,17 @@ public class MessageController {
 
     @GetMapping("/getAllMessages")
     public JSONResult<Object> getAllMessages(@RequestHeader("token") String token) {
-        boolean flag = messageService.verifyToken(token);
+        UserTokenVo userTokenVo = messageService.verifyToken(token);
         List<MessageEntity> entityList;
-        if (flag) {
-            entityList = messageService.getAllMessages();
-            return jsonResult.success(HttpStatus.OK.value(), entityList);
+        if (userTokenVo != null) {
+            if (userTokenVo.getRoleList().contains(ConstantsUtils.ROLE_ADMIN)){
+                entityList = messageService.getAllMessages();
+                return jsonResult.success(HttpStatus.OK.value(), entityList);
+            } else {
+                return jsonResult.error(HttpStatus.UNAUTHORIZED.value(),
+                        "Your current role is not admin, can't use this method.");
+            }
+
         } else {
             return jsonResult.error(HttpStatus.UNAUTHORIZED.value(),
                     "The current token is not valid or expired, please get new one from ums application.");
@@ -49,12 +64,17 @@ public class MessageController {
 
     @GetMapping("/getMessagesBySubscriberId")
     public JSONResult<Object> getMessagesBySubscriberId(@RequestHeader("token") String token,
-                                                      @RequestParam("userId") String userId) {
-        boolean flag = messageService.verifyToken(token);
+                                                        @RequestParam("userId") String userId) {
+        UserTokenVo userTokenVo = messageService.verifyToken(token);
         List<MessageEntity> entityList;
-        if (flag) {
-            entityList = messageService.getMessagesBySubscriberId(userId);
-            return jsonResult.success(HttpStatus.OK.value(), entityList);
+        if (userTokenVo != null) {
+            if (userTokenVo.getRoleList().contains(ConstantsUtils.ROLE_SUBSCRIBER)){
+                entityList = messageService.getMessagesBySubscriberId(userId);
+                return jsonResult.success(HttpStatus.OK.value(), entityList);
+            } else {
+                return jsonResult.error(HttpStatus.UNAUTHORIZED.value(),
+                        "Your current role is not subscriber, can't use this method.");
+            }
         } else {
             return jsonResult.error(HttpStatus.UNAUTHORIZED.value(),
                     "The current token is not valid or expired, please get new one from ums application.");

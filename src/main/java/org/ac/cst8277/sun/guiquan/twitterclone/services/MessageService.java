@@ -24,7 +24,7 @@ public class MessageService {
     @Resource(name = "umsConnector")
     private UMSConnector umsConnector;
 
-    public boolean verifyToken(String token) {
+    public UserTokenVo verifyToken(String token) {
         Mono<Object> objectMono = umsConnector.retrieveUmsData(uri, token);
         ExecutorService executorService = Executors.newSingleThreadExecutor();
         Future future = executorService.submit(() -> objectMono.block());
@@ -35,13 +35,13 @@ public class MessageService {
             userTokenVo = HttpResponseExtractor.extractDataFromHttpClientResponse(tokenInfoMap, UserTokenVo.class);
         } catch (InterruptedException e) {
             System.err.println("verifyToken.InterruptedException=" + e.getMessage());
-            return false;
+            userTokenVo = null;
         } catch (ExecutionException e) {
             System.err.println("verifyToken.ExecutionException=" + e.getMessage());
-            return false;
+            userTokenVo = null;
         }
         executorService.shutdown();
-        return userTokenVo != null;
+        return userTokenVo;
     }
 
     public List<MessageEntity> getMessagesByProducerId(String producer_id) {

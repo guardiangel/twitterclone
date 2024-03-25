@@ -5,6 +5,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -14,4 +16,6 @@ public class UserTokenVo implements Serializable {
     private String token;
     private Long duration;
     private Long issueAt;
+    private List<String> roleList = new ArrayList<>();
+
 }
