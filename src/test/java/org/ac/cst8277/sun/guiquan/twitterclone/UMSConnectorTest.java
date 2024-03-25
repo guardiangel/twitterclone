@@ -1,6 +1,7 @@
 package org.ac.cst8277.sun.guiquan.twitterclone;
 
 import jakarta.annotation.Resource;
+import org.ac.cst8277.sun.guiquan.twitterclone.reponseVo.UserTokenVo;
 import org.ac.cst8277.sun.guiquan.twitterclone.utils.HttpResponseExtractor;
 import org.ac.cst8277.sun.guiquan.twitterclone.utils.UMSConnector;
 import org.junit.jupiter.api.Test;
@@ -10,17 +11,20 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.nio.charset.Charset;
+import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.ExecutionException;
 
 @SpringBootTest
 public class UMSConnectorTest {
 
-    private String uriUmsHost="http://127.0.0.1";
+    private String uriUmsHost = "http://127.0.0.1";
     // get value from the configuration properties file
-    private String uriUmsPort="9000";
+    private String uriUmsPort = "8080";
     @Resource(name = "umsConnector")
     private UMSConnector umsConnector;
 
@@ -29,27 +33,32 @@ public class UMSConnectorTest {
      * When testing the code using postman tool, it will cause
      * java.lang.IllegalStateException: blockOptional() is blocking, which is not supported in thread reactor-http-nio-3
      * Solution:
-     *ExecutorService executorService = Executors.newSingleThreadExecutor();
-     *Future future = executorService.submit(() -> objectMono.block());
-     *
+     * ExecutorService executorService = Executors.newSingleThreadExecutor();
+     * Future future = executorService.submit(() -> objectMono.block());
      */
     @Test
     public void test() {
-        /*String uri = "/getUserTokenByTokenId";
+        String uri = "/getUserTokenByTokenId";
+        String token = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJHdWlxdWFuIFN1biIsInJvbGVzIjpbIlJJQkVSIl0sImlhdCI6MTcxMTM5NTg4MywiZXhwIjoxNzExMzk2NzgzfQ.H3TsB29Z52gXAU4Fn84fUhAsY9XtRvYgLuWLadU-3HU";
         WebClient client = WebClient.builder().baseUrl(uriUmsHost + ":" + uriUmsPort)
                 .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-                .defaultHeader("token","39f3b313-9f55-4acb-80d6-80b3d84838fb")
+                .defaultHeader("token", token)
+//                .defaultHeader(HttpHeaders.AUTHORIZATION,
+//                        "Bearer " + token)
                 .build();
         // define the request to send and its deserialization (in .bodyToMono(...))
-        Mono<Object> response = client.method(HttpMethod.GET).uri(uri).accept(MediaType.APPLICATION_JSON)
-                .acceptCharset(Charset.forName("UTF-8")).retrieve().bodyToMono(Object.class);
-        Optional<Object> objectOptional = response.blockOptional();
-        UserTokenVo userTokenVo;
-        if (objectOptional.isPresent()) {
-            //System.err.println(objectOptional.get());
-            userTokenVo = HttpResponseExtractor.extractDataFromHttpClientResponse(objectOptional.get(),
-                    UserTokenVo.class);
-            System.err.println(userTokenVo);
-        }*/
+        Flux<Object> response = client.method(HttpMethod.GET).uri(uri).accept(MediaType.APPLICATION_JSON)
+                .acceptCharset(Charset.forName("UTF-8")).retrieve().bodyToFlux(Object.class);
+
+        try {
+            List<Object> list = response.collectList().toFuture().get();
+            list.forEach(o -> {
+                System.err.println(o);
+            });
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        } catch (ExecutionException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

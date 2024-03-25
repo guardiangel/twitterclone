@@ -8,6 +8,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
+
 import java.nio.charset.Charset;
 
 @Configuration("umsConnector")
@@ -19,15 +20,19 @@ public class UMSConnector {
     // get value from the configuration properties file
     @Value("${ums.port}")
     private String uriUmsPort;
+
     @PostConstruct
     public void print() {
         System.err.println("uriUmsHost=" + uriUmsHost + ",umsPort=" + uriUmsPort);
     }
+
     public Mono<Object> retrieveUmsData(String uri, String token) {
         // prepare the HTTP Client and define some HTTP headers for it
         WebClient client = WebClient.builder().baseUrl(uriUmsHost + ":" + uriUmsPort)
                 .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-                .defaultHeader("token", token).build();
+                .defaultHeader(HttpHeaders.AUTHORIZATION, "Bearer " + token)// for security verification of ums application
+                .defaultHeader("token", token)//search entity for next steps of the current applicaiton
+                .build();
         // define the request to send and its deserialization (in .bodyToMono(...))
         Mono<Object> response = client.method(HttpMethod.GET).uri(uri).accept(MediaType.APPLICATION_JSON)
                 .acceptCharset(Charset.forName("UTF-8")).retrieve().bodyToMono(Object.class);

@@ -30,7 +30,7 @@ public class MessageController {
             return jsonResult.success(HttpStatus.OK.value(), entityList);
         } else {
             return jsonResult.error(HttpStatus.UNAUTHORIZED.value(),
-                    "The current token is not valid.");
+                    "The current token is not valid or expired, please get new one from ums application.");
         }
     }
 
@@ -43,7 +43,7 @@ public class MessageController {
             return jsonResult.success(HttpStatus.OK.value(), entityList);
         } else {
             return jsonResult.error(HttpStatus.UNAUTHORIZED.value(),
-                    "The current token is not valid.");
+                    "The current token is not valid or expired, please get new one from ums application.");
         }
     }
 
@@ -57,7 +57,7 @@ public class MessageController {
             return jsonResult.success(HttpStatus.OK.value(), entityList);
         } else {
             return jsonResult.error(HttpStatus.UNAUTHORIZED.value(),
-                    "The current token is not valid.");
+                    "The current token is not valid or expired, please get new one from ums application.");
         }
     }
 }

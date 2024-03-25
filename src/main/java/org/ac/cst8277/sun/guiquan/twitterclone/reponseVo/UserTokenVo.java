@@ -1,4 +1,4 @@
-package org.ac.cst8277.sun.guiquan.twitterclone;
+package org.ac.cst8277.sun.guiquan.twitterclone.reponseVo;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -12,4 +12,6 @@ import java.io.Serializable;
 public class UserTokenVo implements Serializable {
     private String userId;
     private String token;
+    private Long duration;
+    private Long issueAt;
 }

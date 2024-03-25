@@ -1,7 +1,7 @@
 package org.ac.cst8277.sun.guiquan.twitterclone.services;
 
 import jakarta.annotation.Resource;
-import org.ac.cst8277.sun.guiquan.twitterclone.UserTokenVo;
+import org.ac.cst8277.sun.guiquan.twitterclone.reponseVo.UserTokenVo;
 import org.ac.cst8277.sun.guiquan.twitterclone.entities.MessageEntity;
 import org.ac.cst8277.sun.guiquan.twitterclone.repositories.MessageRepository;
 import org.ac.cst8277.sun.guiquan.twitterclone.utils.HttpResponseExtractor;
@@ -34,9 +34,11 @@ public class MessageService {
             tokenInfoMap = (Map<String, Object>) future.get();
             userTokenVo = HttpResponseExtractor.extractDataFromHttpClientResponse(tokenInfoMap, UserTokenVo.class);
         } catch (InterruptedException e) {
-            throw new RuntimeException(e);
+            System.err.println("verifyToken.InterruptedException=" + e.getMessage());
+            return false;
         } catch (ExecutionException e) {
-            throw new RuntimeException(e);
+            System.err.println("verifyToken.ExecutionException=" + e.getMessage());
+            return false;
         }
         executorService.shutdown();
         return userTokenVo != null;
